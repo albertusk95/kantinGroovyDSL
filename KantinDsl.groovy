@@ -4,6 +4,9 @@ class EmailDsl {
 	def stocks = []
 	def menus = []
 	def prices = []
+	def tables = []
+	def incomes = []
+	def outcomes = []
 
 	def static access(closure) {
 		EmailDsl email = new EmailDsl()
@@ -74,6 +77,23 @@ class EmailDsl {
 		showWithNewLine('')
 	
 	}
+
+	// add tables 
+ 	def table(String n_table) { 
+        showWithNewLine("ADDING TABLES") 
+        
+        int tab = 0; 
+        tab = Integer.parseInt(n_table) 
+        
+        for(int i=0;i<tab;i++) { 
+            tables<<"available" 
+        } 
+        
+        showWithNoNewLine("There are ") 
+        showWithNoNewLine(tab) 
+        showWithNewLine(" tables.") 
+        showWithNewLine("") 
+    }
 
 	// count the number of stock
 	def stock(String n_stock) {
@@ -189,17 +209,17 @@ class EmailDsl {
 		showWithNewLine('')
 	}
 
-	def buy(List<String> n_buy) {
+	def order(List<String> n_order) {
 
 		showWithNewLine("ORDERING SOME FOOD")
 
-		for (int i = 0; i < n_buy.size(); i++) {
+		for (int i = 0; i < n_order.size(); i++) {
 			for (int j = 0; j < menus.size(); j++) {
-				if (n_buy.get(i).split()[0] == menus.get(j).split()[0]) {
-					int amount = n_buy.get(i).split()[1].toInteger()
+				if (n_order.get(i).split()[0] == menus.get(j).split()[0]) {
+					int amount = n_order.get(i).split()[1].toInteger()
 					int remaining = menus.get(j).split()[1].toInteger() - amount
 
-					menus.set(j, n_buy.get(i).split()[0] + " " + remaining.toString())
+					menus.set(j, n_order.get(i).split()[0] + " " + remaining.toString())
 
 					break
 				}
@@ -207,7 +227,73 @@ class EmailDsl {
 		}
 
 		showWithNoNewLine("Order:")
-		showWithNewLine(n_buy)
+		showWithNewLine(n_order)
+
+	}
+
+	def income(List<String> n_income) {
+
+		showWithNewLine("ADDING INCOME")
+
+		for (int i = 0; i < n_income.size(); i++) {
+			incomes << n_income.get(i)
+		}
+
+		showWithNewLine("List of incomes:")
+		
+		for (int i = 0; i < incomes.size(); i++) {
+			showWithNewLine(incomes.get(i))
+		}
+
+		showWithNewLine('')
+
+	}
+
+	def outcome(List<String> n_outcome) {
+
+		showWithNewLine("ADDING OUTCOME")
+
+		for (int i = 0; i < n_outcome.size(); i++) {
+			outcomes << n_outcome.get(i)
+		}
+
+		showWithNewLine("List of outcomes:")
+		
+		for (int i = 0; i < outcomes.size(); i++) {
+			showWithNewLine(outcomes.get(i))
+		}
+
+		showWithNewLine('')
+
+	}
+
+	def getTotalIncomes() {
+
+		showWithNewLine("CALCULATING TOTAL INCOMES")
+
+		int incomeValue = 0
+
+		for (int i = 0; i < incomes.size(); i++) {
+			incomeValue += incomes.get(i).split()[2]
+		}
+
+		showWithNoNewLine("Total incomes:")
+		showWithNewLine(incomeValue)
+
+	}
+
+	def getTotalOutcomes() {
+
+		showWithNewLine("CALCULATING TOTAL OUTCOMES")
+
+		int outcomeValue = 0
+
+		for (int i = 0; i < outcomes.size(); i++) {
+			outcomeValue += outcomes.get(i).split()[2]
+		}
+
+		showWithNoNewLine("Total outcomes:")
+		showWithNewLine(outcomeValue)
 
 	}
 
@@ -222,10 +308,14 @@ class EmailDsl {
 
 }
 
+// Access the DSL
 EmailDsl.access {
 	add {
 		stock (["beras 50 kg", "nasi 30 kg", "ayam 10 kg"])
 		menu (["nasi 10 pcs", "ikan 30 pcs", "mie_goreng 10 pcs"])
+		table "50"
+		income (["1/01/2017 ikan 20000", "2/01/2017 mie_goreng 50000"])
+		outcome (["1/01/2017 pembelian_meja 300000"])
 	}
 
 	update {
@@ -243,6 +333,8 @@ EmailDsl.access {
 
 	calculate {
 		price (["nasi 1 pcs", "ikan 2 pcs", "mie_goreng 2 pcs"])
+		totalIncomes
+		totalOutcomes
 	}
 
 	show {
@@ -250,47 +342,12 @@ EmailDsl.access {
 		menus
 	}
 
-	buy (["mie_goreng 2 pcs", "nasi 1 pcs"])
+	order (["mie_goreng 2 pcs", "nasi 1 pcs"])
 
 	count {
 		menu "mie_goreng"
 	}
 
+
+
 }
-
-
-
-/*
-KantinDSL.access {
-
-	//please add the stock of beras of 50
-	//please(add).the(stock).of(beras).of(50)
-
-	please count the stock of beras
-	please count the price of nasi 1 ikan 2 tempe 2
-	//please(count).the(stock).of(beras)
-	//please(count).the(price).of(nasi(1).ikan(2).tempe(2))
-
-	please show the list of menu
-	please show the list of stocks
-	//please(show).the(list).of(stocks)
-	//please(show).the(list).of(menu)
-}
-*/
-
-/*
-show = { println it }
-
-square_root = { Math.sqrt(it) }
-
-def please(action) {
-   [the: {what->
-            [of: { number -> action(what(number)) }]
-         }
-   ]
-}
-
-please show the square_root of 100
-please show the square_root of 81
-please(show).the(square_root).of(36)
-*/
