@@ -27,6 +27,10 @@ class EmailDsl {
 		clo()
 	}
 
+	def show(clo) {
+		clo()
+	}
+
 	// add stock
 	def stock(List<String> n_stock) {
 
@@ -163,6 +167,28 @@ class EmailDsl {
 
 	}
 
+	def getStocks() {
+		showWithNewLine("FETCHING ALL STOCKS")
+
+		for (int i = 0; i < stocks.size(); i++) {
+			showWithNoNewLine(stocks.get(i))
+			showWithNewLine(" kg")
+		}
+
+		showWithNewLine('')
+	}
+
+	def getMenus() {
+		showWithNewLine("FETCHING ALL MENUS")
+
+		for (int i = 0; i < menus.size(); i++) {
+			showWithNoNewLine(menus.get(i))
+			showWithNewLine(" pcs")
+		}
+
+		showWithNewLine('')
+	}
+
 	// item printer
 	def showWithNewLine(item) {
 		println item
@@ -196,7 +222,8 @@ EmailDsl.access {
 	}
 
 	show {
-		
+		stocks
+		menus
 	}
 
 }
