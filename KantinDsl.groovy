@@ -63,7 +63,7 @@ class EmailDsl {
 			menus << n_menu.get(i).split()[0] + " " + n_menu.get(i).split()[1]
 		
 			showWithNoNewLine("A total of ")
-			showWithNoNewLine(n_menu.get(i).split()[1] + " pcs")
+			showWithNoNewLine(n_menu.get(i).split()[1] + " pcs ")
 			showWithNoNewLine(n_menu.get(i).split()[0] + " ")
 			showWithNewLine("was added")
 
@@ -189,6 +189,28 @@ class EmailDsl {
 		showWithNewLine('')
 	}
 
+	def buy(List<String> n_buy) {
+
+		showWithNewLine("ORDERING SOME FOOD")
+
+		for (int i = 0; i < n_buy.size(); i++) {
+			for (int j = 0; j < menus.size(); j++) {
+				if (n_buy.get(i).split()[0] == menus.get(j).split()[0]) {
+					int amount = n_buy.get(i).split()[1].toInteger()
+					int remaining = menus.get(j).split()[1].toInteger() - amount
+
+					menus.set(j, n_buy.get(i).split()[0] + " " + remaining.toString())
+
+					break
+				}
+			}
+		}
+
+		showWithNoNewLine("Order:")
+		showWithNewLine(n_buy)
+
+	}
+
 	// item printer
 	def showWithNewLine(item) {
 		println item
@@ -203,27 +225,35 @@ class EmailDsl {
 EmailDsl.access {
 	add {
 		stock (["beras 50 kg", "nasi 30 kg", "ayam 10 kg"])
-		menu (["ikan_asin 30 pcs", "mie_goreng 10 pcs"])
+		menu (["nasi 10 pcs", "ikan 30 pcs", "mie_goreng 10 pcs"])
 	}
 
 	update {
 		price "nasi 3000"
-		price "ikan 8000"
+		price "ikan 9000"
+		price "mie_goreng 10000"
 	}
 
 	count {
 		stock "beras"
 		stock "ayam"
 		menu "mie_goreng"
+		menu "ikan"
 	}
 
 	calculate {
-		price (["nasi 1 pcs", "ikan 2 pcs", "tempe 2 pcs"])
+		price (["nasi 1 pcs", "ikan 2 pcs", "mie_goreng 2 pcs"])
 	}
 
 	show {
 		stocks
 		menus
+	}
+
+	buy (["mie_goreng 2 pcs", "nasi 1 pcs"])
+
+	count {
+		menu "mie_goreng"
 	}
 
 }
